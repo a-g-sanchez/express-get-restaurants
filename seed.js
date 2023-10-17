@@ -7,7 +7,7 @@ const syncSeed = async () => {
     await Restaurant.bulkCreate(seedRestaurant)
     // BONUS: Update with Item and Menu bulkCreate
     await Menu.bulkCreate(seedMenu)
-    await Menu.bulkCreate(seedItem)
+    await Item.bulkCreate(seedItem)
 }
 
 // syncSeed()

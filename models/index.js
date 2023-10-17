@@ -5,8 +5,8 @@ const Item = require('./Item')
 Restaurant.hasMany(Menu)
 Menu.belongsTo(Restaurant)
 
-Item.belongsToMany(Menu, {through: menuItem})
-Menu.belongsToMany(Item, {through: menuItem})
+Item.belongsToMany(Menu, {through: 'menuItem'})
+Menu.belongsToMany(Item, {through: 'menuItem'})
 
 module.exports = {
     Restaurant,
