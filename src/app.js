@@ -19,7 +19,7 @@ app.get('/restaurants/:id', async(req, res, next) => {
         if(!restaurant){
             throw new Error('No restaurant with that id found')
         }
-        res.json(restaurant)
+        res.send(restaurant)
     }catch(err){
         next(err)
     }
@@ -33,7 +33,7 @@ app.post('/restaurants', async(req, res, next) => {
         if(!restaurant){
             throw new Error('Restaurant not created')
         }
-        res.json(restaurant)     
+        res.send(restaurant)     
     } catch (error) {
         next(error)
     }
@@ -43,12 +43,12 @@ app.post('/restaurants', async(req, res, next) => {
 app.put('/restaurants/:id', async(req, res, next) => {
     const id = req.params.id
     try {
-        const restaurant = await Restaurant.findByPk(id)
-        const updatedRestaurant = await restaurant.update(req.body)
+        const selectedRestaurant = await Restaurant.findByPk(id)
+        const updatedRestaurant = await selectedRestaurant.update(req.body)
         if(!updatedRestaurant){
             throw new Error('No Restaurant with that id found')
         }
-        res.json(updatedRestaurant)
+        res.send(updatedRestaurant)
     } catch (error) {
         next(error)
     }
@@ -57,15 +57,12 @@ app.put('/restaurants/:id', async(req, res, next) => {
 app.delete('/restaurants/:id', async(req, res, next) => {
     const id = req.params.id
     try {
-        const deletedRestaurant = await Restaurant.destroy({
-            where: {
-                id:id
-            }
-        })
+        const selectedRestaurant = await Restaurant.findByPk(id)
+        const deletedRestaurant = await selectedRestaurant.destroy()
         if(!deletedRestaurant){
             throw new Error('No restaurant deleted')
         }
-        res.json(deletedRestaurant)
+        res.send(deletedRestaurant)
     }catch(error){
         next(error)
     }
