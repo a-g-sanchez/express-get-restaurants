@@ -78,6 +78,15 @@ describe('Route tests', () => {
         )
     })
 
+    test('POST should return error arr if fields arent provided', async() => {
+        const response = await request(app).post('/restaurants').send({
+            name: 'qwe'
+        })
+
+        expect(response.body).toHaveProperty("errors")
+        expect(Array.isArray(response.body.errors)).toBe(true)
+    })
+
     test('PUT should update the item with the given id', async() => {
         const response = await request(app)
             .put('/restaurants/1')

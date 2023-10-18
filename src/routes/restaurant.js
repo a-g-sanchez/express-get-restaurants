@@ -1,8 +1,9 @@
 const { Restaurant, Menu, Item } = require('../../models')
 const express = require('express')
 const router = express.Router()
+const { check, validationResult } = require('express-validator')
 
-
+//Get a restaurant
 router.get('/', async (req, res) => {
     const restaurants = await Restaurant.findAll({
         include: Menu
@@ -11,6 +12,7 @@ router.get('/', async (req, res) => {
     res.json(restaurants)
 })
 
+//Get a restaurant by ID
 router.get('/:id', async(req, res, next) => {
     const id = req.params.id
     try{
@@ -25,20 +27,31 @@ router.get('/:id', async(req, res, next) => {
 })
 
 //Create a restaurant
+router.post('/',[
+    check('name').not().isEmpty().trim(),
+    check('location').not().isEmpty().trim(),
+    check('cuisine').not().isEmpty().trim()
+    ], async(req, res, next) => {
 
-router.post('/', async(req, res, next) => {
-    try {
-        const restaurant = await Restaurant.create(req.body)
-        if(!restaurant){
-            throw new Error('Restaurant not created')
+    const errors = validationResult(req)
+    
+    if(!errors.isEmpty()){
+        res.send({errors: errors.array()})
+    }else{    
+        try {
+            const restaurant = await Restaurant.create(req.body)
+            if(!restaurant){
+                throw new Error('Restaurant not created')
+            }
+            res.send(restaurant)     
+        } catch (err) {
+            next(err)
         }
-        res.send(restaurant)     
-    } catch (error) {
-        next(error)
     }
    
 })
 
+//Update a restaurant
 router.put('/:id', async(req, res, next) => {
     const id = req.params.id
     try {
@@ -53,6 +66,7 @@ router.put('/:id', async(req, res, next) => {
     }
 })
 
+//Delete a restaurant
 router.delete('/:id', async(req, res, next) => {
     const id = req.params.id
     try {
